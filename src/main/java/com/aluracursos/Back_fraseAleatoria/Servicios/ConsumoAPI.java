@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ConsumoAPI {
@@ -20,19 +21,17 @@ public class ConsumoAPI {
     }
 
     // Método para busxar libro por título
-    public List<Libros> buscarLibroTitulo(String titulo) {
+    public Libros buscarLibroTitulo(String titulo) {
         String url = API_URL + "?search=" + titulo;
-
-        // Usamos exchange con ParameterizedTypeReference para manejar la respuesta como LibrosResponse
         ResponseEntity<LibrosResponse> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<LibrosResponse>() {}  // Referencia explícita del tipo
+                new ParameterizedTypeReference<LibrosResponse>() {}
         );
 
-
-        return response.getBody().results();  // Retorna la lista de libros desde la respuesta
+        List<Libros> resultados = response.getBody().results();
+        return resultados.isEmpty() ? null : resultados.get(0);
     }
 
     public void listarLibroRegistrado() {

@@ -30,17 +30,21 @@ public class Consola {
                 case 1:
                     System.out.println("Introduce el título del libro que deseas buscar:");
                     String titulo = input.nextLine();
-                    List<Libros> librosEncontrados = consumoApi.buscarLibroTitulo(titulo);
+                    Libros libroEncontrado = consumoApi.buscarLibroTitulo(titulo);
 
                     // Mostrar los resultados
-                    for (Libros libro : librosEncontrados) {
-                        System.out.println("\nTítulo: " + libro.titulo());
-                        System.out.println("Autor: " + libro.autor());        // Cambio aquí
-                        System.out.println("Idioma: " + libro.idioma());      // Cambio aquí
-                        System.out.println("Número de descargas: " + libro.numeroDescargas());
+                    if (libroEncontrado != null) {
+                        System.out.println("----------LIBRO---------");
+                        System.out.println("\nTítulo: " + libroEncontrado.titulo());
+                        System.out.println("Autor: " + libroEncontrado.autor());
+                        System.out.println("Idioma: " + libroEncontrado.idioma());
+                        System.out.println("Número de descargas: " + libroEncontrado.numeroDescargas());
                         System.out.println("------------------------");
+                    } else {
+                        System.out.println("No se encontró ningún libro con ese título.");
                     }
                     break;
+
                 case 2:
                     consumoApi.listarLibroRegistrado();
                     break;
