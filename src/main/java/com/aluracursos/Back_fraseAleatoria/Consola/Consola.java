@@ -1,15 +1,24 @@
 package com.aluracursos.Back_fraseAleatoria.Consola;
 
 import com.aluracursos.Back_fraseAleatoria.Modelos.Libros;
+import com.aluracursos.Back_fraseAleatoria.Repository.LibroDB;
 import com.aluracursos.Back_fraseAleatoria.Servicios.ConsumoAPI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 
+@Component
 public class Consola {
 
     private Scanner input = new Scanner(System.in);
-    private ConsumoAPI consumoApi = new ConsumoAPI();
+    private ConsumoAPI consumoApi;
+
+    @Autowired
+    public Consola(ConsumoAPI consumoApi) {
+        this.consumoApi = consumoApi;
+    }
 
     public void mostrarMenu() {
         var opcion = -1;
@@ -30,15 +39,16 @@ public class Consola {
                 case 1:
                     System.out.println("Introduce el título del libro que deseas buscar:");
                     String titulo = input.nextLine();
-                    Libros libroEncontrado = consumoApi.buscarLibroTitulo(titulo);
+                    LibroDB libroEncontrado = consumoApi.buscarYGuardarLibroTitulo(titulo);
 
                     // Mostrar los resultados
                     if (libroEncontrado != null) {
                         System.out.println("----------LIBRO---------");
-                        System.out.println("\nTítulo: " + libroEncontrado.titulo());
-                        System.out.println("Autor: " + libroEncontrado.autor());
-                        System.out.println("Idioma: " + libroEncontrado.idioma());
-                        System.out.println("Número de descargas: " + libroEncontrado.numeroDescargas());
+                        System.out.println("\nTítulo: " + libroEncontrado.getTitulo());
+                        System.out.println("Autor: " + libroEncontrado.getAutor());
+                        System.out.println("Idioma: " + libroEncontrado.getIdioma());
+                        System.out.println("Número de descargas: " + libroEncontrado.getNumeroDescargas());
+                        System.out.println("ID en base de datos: " + libroEncontrado.getId());
                         System.out.println("------------------------");
                     } else {
                         System.out.println("No se encontró ningún libro con ese título.");
