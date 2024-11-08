@@ -84,9 +84,9 @@ public class ConsumoAPI {
         List<LibroDB> libros = libroRepositorio.findAll();
 
         if (libros.isEmpty()) {
-            System.out.printf("No hay libros registrados en la base de datos.");
+            System.out.println("No hay libros registrados en la base de datos.");
         } else {
-            System.out.printf("-------LIBROS REGISTRADOS-------");
+            System.out.println("-------LIBROS REGISTRADOS-------");
             for (LibroDB libro : libros) {
                 System.out.println("\nTítulo: " + libro.getTitulo());
                 System.out.println("Autor: " + libro.getAutor());
@@ -98,7 +98,19 @@ public class ConsumoAPI {
     }
 
     public void listarAutorRegistrado() {
-        System.out.println("Listando autor registrado");
+        List<LibroDB> libros = libroRepositorio.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay autores registrados en la base de datos.");
+        } else {
+            System.out.println("-------AUTORES REGISTRADOS-------");
+            for (LibroDB libro : libros) {
+                System.out.println("\nNombre: " + libro.getAutor());
+                System.out.println("Año de nacimiento:");
+                System.out.println("Año de fallecimiento:");
+                System.out.println("--------------------------------------");
+            }
+        }
     }
 
     public void listarAutorVivo() {

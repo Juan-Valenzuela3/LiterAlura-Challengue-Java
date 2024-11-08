@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface LibroRepositorio extends JpaRepository<LibroDB, Long> {
     List<LibroDB> findByTituloEqualsIgnoreCase(String titulo);
+    List<LibroDB> findByAutor(String autor);
 }
