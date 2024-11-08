@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -79,7 +80,21 @@ public class ConsumoAPI {
     }
 
     public void listarLibroRegistrado() {
-        System.out.println("Listando libro registrado");
+
+        List<LibroDB> libros = libroRepositorio.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.printf("No hay libros registrados en la base de datos.");
+        } else {
+            System.out.printf("-------LIBROS REGISTRADOS-------");
+            for (LibroDB libro : libros) {
+                System.out.println("\nTítulo: " + libro.getTitulo());
+                System.out.println("Autor: " + libro.getAutor());
+                System.out.println("Idioma: " + libro.getIdioma());
+                System.out.println("Número de descargas: " + libro.getNumeroDescargas());
+                System.out.println("--------------------------------------");
+            }
+        }
     }
 
     public void listarAutorRegistrado() {
