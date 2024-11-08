@@ -13,22 +13,20 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Libros(
         @JsonAlias("title") String titulo,
-        @JsonProperty("authors") @JsonAlias("authors") String autor,
-        @JsonProperty("languages") @JsonAlias("languages") String idioma,
+        @JsonProperty("authors") List<Autor> autores,
+        @JsonProperty("languages") List<String> idiomas,
         @JsonAlias("download_count") int numeroDescargas
 ) {
     @JsonCreator
     public Libros(
-            String titulo,
-            @JsonProperty("authors") JsonNode authors,
-            @JsonProperty("languages") JsonNode languages,
-            int numeroDescargas
+            @JsonProperty("title") String titulo,
+            @JsonProperty("authors") List<Autor> autores,
+            @JsonProperty("languages") List<String> idiomas,
+            @JsonProperty("download_count") int numeroDescargas
     ) {
-        this(
-                titulo,
-                authors != null && !authors.isEmpty() ? authors.get(0).get("name").asText() : "Desconocido",
-                languages != null && !languages.isEmpty() ? languages.get(0).asText() : "Desconocido",
-                numeroDescargas
-        );
+        this.titulo = titulo;
+        this.autores = autores;
+        this.idiomas = idiomas;
+        this.numeroDescargas = numeroDescargas;
     }
 }

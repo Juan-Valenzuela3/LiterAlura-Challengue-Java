@@ -1,5 +1,6 @@
 package com.aluracursos.Back_fraseAleatoria.Servicios;
 
+import com.aluracursos.Back_fraseAleatoria.Modelos.Autor;
 import com.aluracursos.Back_fraseAleatoria.Modelos.Libros;
 import com.aluracursos.Back_fraseAleatoria.Modelos.LibrosResponse;
 import com.aluracursos.Back_fraseAleatoria.Repository.LibroDB;
@@ -7,14 +8,18 @@ import com.aluracursos.Back_fraseAleatoria.Repository.LibroRepositorio;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +44,16 @@ public class ConsumoAPI {
 
     public LibroDB buscarYGuardarLibroTitulo(String titulo) {
         try {
-            // Primero buscar en la API para obtener el título exacto
             String url = API_URL + "?search=" + titulo;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", "application/json");
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
             ResponseEntity<LibrosResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
-                    null,
+                    entity,
                     new ParameterizedTypeReference<LibrosResponse>() {}
             );
 
@@ -54,8 +63,6 @@ public class ConsumoAPI {
             }
 
             Libros libroApi = resultados.get(0);
-
-            // Buscar en la base de datos usando el título exacto de la API
             List<LibroDB> libroExistente = libroRepositorio.findByTituloEqualsIgnoreCase(libroApi.titulo());
 
             if (!libroExistente.isEmpty()) {
@@ -63,12 +70,21 @@ public class ConsumoAPI {
                 return libroExistente.get(0);
             }
 
-            // Si no existe, crear y guardar el nuevo libro
             LibroDB libroDB = new LibroDB();
             libroDB.setTitulo(libroApi.titulo());
-            libroDB.setAutor(libroApi.autor());
-            libroDB.setIdioma(libroApi.idioma());
+            libroDB.setAutor(libroApi.autores().isEmpty() ? "Desconocido" : libroApi.autores().get(0).nombre());
+            libroDB.setIdioma(libroApi.idiomas().isEmpty() ? "Desconocido" : libroApi.idiomas().get(0));
             libroDB.setNumeroDescargas(libroApi.numeroDescargas());
+
+            // Extraer años de nacimiento y fallecimiento del primer autor en la lista
+            if (!libroApi.autores().isEmpty()) {
+                Autor autor = libroApi.autores().get(0);
+                libroDB.setAnioNacimiento(autor.anioNacimiento());
+                libroDB.setAnioFallecimiento(autor.anioFallecimiento());
+            } else {
+                libroDB.setAnioNacimiento(null);
+                libroDB.setAnioFallecimiento(null);
+            }
 
             System.out.println("Guardando nuevo libro en la base de datos.");
             return libroRepositorio.save(libroDB);
@@ -101,13 +117,13 @@ public class ConsumoAPI {
         List<LibroDB> libros = libroRepositorio.findAll();
 
         if (libros.isEmpty()) {
-            System.out.println("No hay autores registrados en la base de datos.");
+            System.out.println("No hay libros registrados en la base de datos.");
         } else {
             System.out.println("-------AUTORES REGISTRADOS-------");
             for (LibroDB libro : libros) {
                 System.out.println("\nNombre: " + libro.getAutor());
-                System.out.println("Año de nacimiento:");
-                System.out.println("Año de fallecimiento:");
+                System.out.println("Año de nacimiento: " + libro.getAnioNacimiento());
+                System.out.println("Año de fallecimiento: " + libro.getAnioFallecimiento());
                 System.out.println("--------------------------------------");
             }
         }
