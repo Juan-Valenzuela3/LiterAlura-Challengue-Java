@@ -37,29 +37,16 @@ public class Consola {
 
             switch (opcion) {
                 case 1:
-                    System.out.println("Introduce el título del libro que deseas buscar:");
+                    System.out.print("Introduce el título del libro que deseas buscar: ");
                     String titulo = input.nextLine();
-                    LibroDB libroEncontrado = consumoApi.buscarYGuardarLibroTitulo(titulo);
-
-                    // Mostrar los resultados
-                    if (libroEncontrado != null) {
-                        System.out.println("----------LIBRO---------");
-                        System.out.println("\nTítulo: " + libroEncontrado.getTitulo());
-                        System.out.println("Autor: " + libroEncontrado.getAutor());
-                        System.out.println("Idioma: " + libroEncontrado.getIdioma());
-                        System.out.println("Número de descargas: " + libroEncontrado.getNumeroDescargas());
-                        System.out.println("ID en base de datos: " + libroEncontrado.getId());
-                        System.out.println("------------------------");
-                    } else {
-                        System.out.println("No se encontró ningún libro con ese título.");
-                    }
+                    consumoApi.buscarYGuardarLibro(titulo);
                     break;
 
                 case 2:
-                    consumoApi.listarLibroRegistrado();
+                    consumoApi.listarLibrosRegistrados();
                     break;
                 case 3:
-                    consumoApi.listarAutorRegistrado();
+                    consumoApi.autoresRegistrados();
                     break;
                 case 4:
                     consumoApi.listarAutorVivo();
