@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class ConsumoAPI {
@@ -30,6 +31,7 @@ public class ConsumoAPI {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final LibroRepositorio libroRepositorio;
+    private Scanner anioAutor = new Scanner(System.in);
 
     @Autowired
     public ConsumoAPI(LibroRepositorio libroRepositorio) {
@@ -124,13 +126,47 @@ public class ConsumoAPI {
                 System.out.println("\nNombre: " + libro.getAutor());
                 System.out.println("Año de nacimiento: " + libro.getAnioNacimiento());
                 System.out.println("Año de fallecimiento: " + libro.getAnioFallecimiento());
+                System.out.println("Libros: " + libro.getTitulo());
                 System.out.println("--------------------------------------");
             }
         }
     }
 
     public void listarAutorVivo() {
-        System.out.println("Listando autor vivo");
+        List<LibroDB> libros = libroRepositorio.findAll();
+
+        System.out.println("Ingresa el año del autor que deseas buscar:");
+        String input = anioAutor.nextLine();
+
+        try {
+            int anio = Integer.parseInt(input);
+
+            boolean autorEncontrado = false;
+            for (LibroDB libro : libros) {
+
+                Integer anioNacimiento = libro.getAnioNacimiento();
+                Integer anioFallecimiento = libro.getAnioFallecimiento();
+
+                if (anioNacimiento != null && anio >= anioNacimiento &&
+                        (anioFallecimiento == null || anio <= anioFallecimiento)) {
+
+                    // Imprimir la información del autor
+                    System.out.println("Autor: " + libro.getAutor());
+                    System.out.println("Año de nacimiento: " + anioNacimiento);
+                    System.out.println("Año de fallecimiento: " + (anioFallecimiento != null ? anioFallecimiento : "Aún vivo"));
+                    System.out.println("Libro: " + libro.getTitulo());
+                    System.out.println("--------------------------------------");
+                    autorEncontrado = true;
+                }
+            }
+
+            if (!autorEncontrado) {
+                System.out.println("No se encontraron autores vivos en el año: " + anio);
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Por favor, ingresa un año válido.");
+        }
     }
 
     public void listarLibroPorIdioma() {

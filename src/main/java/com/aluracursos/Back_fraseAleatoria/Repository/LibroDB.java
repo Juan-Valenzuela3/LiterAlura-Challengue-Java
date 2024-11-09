@@ -63,7 +63,7 @@ public class LibroDB {
         this.numeroDescargas = numeroDescargas;
     }
     public void setAnioNacimiento(Integer anioNacimiento) { this.anioNacimiento = anioNacimiento; }
-    public void setAnioFallecimiento(Integer anioFallecimiento) { this.anioFallecimiento = anioNacimiento; }
+    public void setAnioFallecimiento(Integer anioFallecimiento) { this.anioFallecimiento = anioFallecimiento; }
     public void setId(Long id) {
         this.id = id;
     }
