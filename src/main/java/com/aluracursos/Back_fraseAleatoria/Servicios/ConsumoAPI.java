@@ -16,6 +16,9 @@ public class ConsumoAPI {
     @Autowired
     private ListarAutorRegistrado listarAutorRegistrado;
 
+    @Autowired
+    private ListarLibroPorIdioma listarLibroPorIdioma;
+
     public void buscarYGuardarLibro(String titulo) {
         buscarLibro.buscar_GuardarLibro(titulo);
     }
@@ -32,9 +35,7 @@ public class ConsumoAPI {
         listarAutorRegistrado.autorRegistrado();
     }
 
-    public void listarLibroPorIdioma() {
-        System.out.println("Listando libro por idioma");
-    }
+    public void listarLibroPorIdioma() { listarLibroPorIdioma.libroPorIdioma(); }
 
 
     private void validarRespuesta(ResponseEntity<String> response) {
