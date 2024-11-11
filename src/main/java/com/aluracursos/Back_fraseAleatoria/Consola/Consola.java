@@ -56,6 +56,7 @@ public class Consola {
                     break;
                 case 0:
                     System.out.println("Cerrando aplicación...");
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Opción inválida");
