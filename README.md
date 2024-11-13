@@ -1,4 +1,4 @@
-# LITERALURA - CHALLENGE JAVA
+# LITERALURA - CHALLENGUE JAVA
 
 Este proyecto permite buscar información sobre libros mediante una API externa y almacenarla en una base de datos. Permite además listar libros registrados y consultar información de autores de acuerdo con filtros específicos. Desarrollado como parte del aprendizaje en Java y Spring Boot para un desafío propuesto por Alura Latam y Oracle; este proyecto también pone en práctica el uso de APIs REST y bases de datos.
 
